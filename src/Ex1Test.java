@@ -201,4 +201,18 @@ class Ex1Test {
 		double area = 58.5658;
 		assertEquals(a1,area, Ex1.EPS);
 	}
+     @Test
+     /**
+      * Test the derivative function.
+      */
+    public void testDerivative() {
+        double[] p1 = {8,2,6,4};
+        double[] der1 = {2,12,12};
+        double [] der = Ex1.derivative(p1);
+        if (der[0] != der1[0]) {fail();}
+        if (der[1] != der1[1]) {fail();}
+        if (der[2] != der1[2]) {fail();}
+     }
+
+
 }
