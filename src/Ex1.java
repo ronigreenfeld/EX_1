@@ -171,12 +171,45 @@ public class Ex1 {
 	 * @param p1
 	 * @param p2
 	 * @return
+     *
+
+
+    for (int i = 0; i < p1.length; i = i+1) {
+    temp1[i] = p1[i];
+    if (i < len) {
+    ans[(p1.length - len) + i] = 0;
+    }
+    }
+    for (int m = 0; m < p1.length; m = m+1) {
+    ans[m] = p1[m] + temp1[m];
+    }
+    return ans;
+     *
+     *
+     *
+     *
+     *
+     * return (p1+p2)
+     *
+     *
 	 */
 	public static double[] add(double[] p1, double[] p2) {
-		double [] ans = ZERO;//
-        /** add you code below
-
-         /////////////////// */
+		double [] ans = ZERO;
+        if (p1 == null && p2 == null) {return null;}
+        if (p1.length < p2.length) {
+            double[] temp = p2;
+            p2 = p1;
+            p1 = temp;
+        } //now p1.length > p2.length
+        double [] temp1 = new double[p1.length];
+        int len = p1.length - p2.length;
+        for (int i = 0; i < p2.length; i = i+1) {
+            temp1[i] = p2[i];
+        }
+        ans = new double[p1.length];
+        for (int n = 0; n < p1.length; n = n+1) {
+            ans[n] = p1[n] + temp1[n];
+        }
 		return ans;
 	}
 	/**
@@ -211,7 +244,7 @@ public class Ex1 {
 	 */
 	public static double[] derivative (double[] po) {
 		double [] ans = ZERO;//
-        if (po == null){return ans;}
+        if (po == null){return null;}
         double[] p1 = new double[po.length - 1];
         for (int i=1; i < po.length; i=i+1){
             p1[i-1] = (double) i*po[i];                             // po{5,2,3} = p1{2,9}
