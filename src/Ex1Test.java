@@ -213,6 +213,49 @@ class Ex1Test {
         if (der[1] != der1[1]) {fail();}
         if (der[2] != der1[2]) {fail();}
      }
+     @Test
+    /**
+     * Test the poly function.
+     */
+    public void testPoly1() {
+     double[] p1 = {4.6};
+     double [] p2 = {2 , 3.0};
+     double [] p3 = {1.0 , 1 , 5 , 2.1};
+     String s1 = Ex1.poly(p1);
+     String s2 = Ex1.poly(p2);
+     String s3 = Ex1.poly(p3);
+     assertTrue(s1.equals("+4.6"));
+     assertTrue(s2.equals("+3.0X +2.0"));
+     assertTrue(s3.equals("+2.1X^3 +5.0X^2 +1.0X +1.0"));
+     }
+     @Test
+    public void testPoly2() {
+        double[] p1 = {0};
+        double[] p2 = {0 , 4.5};
+        double[] p3 = {0 , 3.0 , 0 , 5.1};
+        String s1 = Ex1.poly(p1);
+        String s2 = Ex1.poly(p2);
+        String s3 = Ex1.poly(p3);
+        assertTrue(s1.equals("0"));
+        assertTrue(s2.equals("+4.5X"));
+        assertTrue(s3.equals("+5.1X^3 +3.0X"));
+     }
+     @Test
+    public void testPoly3() {
+        double[] p1 = {0, -24.1 , -3 , 6.1};
+        String s1 = Ex1.poly(p1);
+        assertTrue(s1.equals("+6.1X^3 -3.0X^2 -24.1X"));
+     }
+     @Test
+    public void testAddSing() {
+        double num1 = 35;
+        double num2 = -2.3;
+        double num3 = 0.0;
+        assertEquals("+35.0", Ex1.addSign(num1));
+        assertEquals("-2.3", Ex1.addSign(num2));
+        assertEquals("+0.0", Ex1.addSign(num3));
+     }
+
 
 
 }
