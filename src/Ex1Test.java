@@ -255,6 +255,13 @@ class Ex1Test {
         assertEquals("-2.3", Ex1.addSign(num2));
         assertEquals("+0.0", Ex1.addSign(num3));
      }
+     @Test
+    public void testCopyArray() {
+        double[] p1 = po1;
+        double[] p2 = po2;
+        double[] p3 = Ex1.copyArray(p2,p1.length);
+        assertTrue(p3.length == p2.length);
+    }
 
 
 

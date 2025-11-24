@@ -119,10 +119,10 @@ public class Ex1 {
      *
      * @param poly the polynomial function represented as an array of doubles
      * @return String representing the polynomial function:
-     *
-     *
-     *
-     *
+     * <p>
+     * <p>
+     * <p>
+     * <p>
      * if (poly.length == 0) {ans = "0"}
      * else {
      * if (poly.length == 1) {
@@ -264,28 +264,26 @@ public class Ex1 {
      * @param p1
      * @param p2
      * @return The function compares the lengths of the arrays P1 and P2, and finds the minimum value between them.
-     * <p>
-     * <p>
+     *
+     *
      * It creates an array based on the length of the shorter one, fills it with the values of the shorter array, and adds neutral values in the additional positions.
      * Finally, the function adds the two arrays together.
-     * <p>
-     * <p>
-     * <p>
+     *
+     *
+     *
      * input (p1,p2)
-     * if (p1.length < p2.length) {                 //change p1.length > p2.length
-     * double[] temp = p2
-     * p2 = p1
-     * p1 = temp
-     * }                                            //now p1.length > p2.length
-     * double [] temp1 = new double[p1.length]      //create new array that temp1.length = p1.length (max length)
-     * for (int i = 0; i < p2.length; i = i+1) {
-     * temp1[i] = p2[i]                             //the array temp1 will receive the values of array P2
+     * if (p1.length < p2.length) {
+     * p1 = copyArray(p1, p2.length)                        //copying array p1 to an array with a length of p2. The values of p1 are preserved in the new array.
      * }
-     * ans = new double[p1.length]                  //update the length array ans
-     * for (int n = 0; n < p1.length; n = n+1) {
-     * ans[n] = p1[n] + temp1[n]                   //adding P1 and P2
+     * if (p2.length < p1.length) {
+     * p2 = copyArray(p2, p1.length)                        //copying array p2 to an array with a length of p1. The values of p2 are preserved in the new array.
      * }
-     * return (ans)                                 //return p1+p2
+     * ans = new double[p1.length]                          //update the length array ans
+     * for (int i = 0; i < p1.length; i = i + 1) {
+     * ans[i] = p1[i] + p2[i];                              //adding P1 and P2
+     * }
+     * return ans                                           //return p1+p2
+     *
      *
      *
      */
@@ -295,18 +293,49 @@ public class Ex1 {
             return null;
         }
         if (p1.length < p2.length) {
-            double[] temp = p2;
-            p2 = p1;
-            p1 = temp;
-        } //now p1.length > p2.length
-        double[] temp1 = new double[p1.length];
+            p1 = copyArray(p1, p2.length);
+        }
+        if (p2.length < p1.length) {
+            p2 = copyArray(p2, p1.length);
+        }
         ans = new double[p1.length];
         for (int i = 0; i < p1.length; i = i + 1) {
-            while (i < p2.length) {
-                temp1[i] = p2[i];
-                break;
+            ans[i] = p1[i] + p2[i];
+        }
+        return ans;
+    }
+
+
+    /**
+     * The function copies a shorter array into a new longer array (adding 0.0 in the positions that were added).
+     *
+     * @param poly an array that represents a polynomial equation.
+     * @param newLength expresses the desired length of the new array.
+     * @return a longer array which represents the same polynomial equation.
+     *
+     *
+     * input (poly[], int newLength)
+     * double[] ans = new double[newLength]
+     * if (poly == null) {return null}
+     * else {
+     * for (int i = 0; i < poly.length; i = i + 1) {
+     * ans[i] = poly[i]
+     * }
+     * }
+     * return ans;
+     *
+     */
+
+    public static double[] copyArray(double[] poly, int newLength) {
+        double[] ans = poly;
+        if (poly.length < newLength) {
+            ans = new double[newLength];
+            if (poly == null) {
+                return null;
             }
-            ans[i] = p1[i] + temp1[i];
+            for (int i = 0; i < poly.length; i = i + 1) {
+                ans[i] = poly[i];
+            }
         }
         return ans;
     }
@@ -350,9 +379,9 @@ public class Ex1 {
      *
      * @param po
      * @return input (p0)
-     *
-     *
-     *
+     * <p>
+     * <p>
+     * <p>
      * double [] ans = {0}
      * if (po[] = null){return ans;}
      * double [] p1 = new double [po.length-1]
