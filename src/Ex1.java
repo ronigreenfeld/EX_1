@@ -122,7 +122,6 @@ public class Ex1 {
      * <p>
      * <p>
      * <p>
-     * <p>
      * if (poly.length == 0) {ans = "0"}
      * else {
      * if (poly.length == 1) {
@@ -264,13 +263,12 @@ public class Ex1 {
      * @param p1
      * @param p2
      * @return The function compares the lengths of the arrays P1 and P2, and finds the minimum value between them.
-     *
-     *
+     * <p>
+     * <p>
      * It creates an array based on the length of the shorter one, fills it with the values of the shorter array, and adds neutral values in the additional positions.
      * Finally, the function adds the two arrays together.
-     *
-     *
-     *
+     * <p>
+     * <p>
      * input (p1,p2)
      * if (p1.length < p2.length) {
      * p1 = copyArray(p1, p2.length)                        //copying array p1 to an array with a length of p2. The values of p1 are preserved in the new array.
@@ -302,6 +300,9 @@ public class Ex1 {
         for (int i = 0; i < p1.length; i = i + 1) {
             ans[i] = p1[i] + p2[i];
         }
+        if (ans != ZERO) {
+            ans = trimArray(ans);
+        }
         return ans;
     }
 
@@ -309,11 +310,11 @@ public class Ex1 {
     /**
      * The function copies a shorter array into a new longer array (adding 0.0 in the positions that were added).
      *
-     * @param poly an array that represents a polynomial equation.
+     * @param poly      an array that represents a polynomial equation.
      * @param newLength expresses the desired length of the new array.
      * @return a longer array which represents the same polynomial equation.
-     *
-     *
+     * <p>
+     * <p>
      * input (poly[], int newLength)
      * double[] ans = new double[newLength]
      * if (poly == null) {return null}
@@ -348,29 +349,81 @@ public class Ex1 {
      * @return
      */
     public static double[] mul(double[] p1, double[] p2) {
-        double[] ans = ZERO;//
+        double[] ans = ZERO;
+        int degree = (p1.length - 1) + (p2.length - 1);
+        ans = new double[degree + 1];
+        for (int i = 0; i < p1.length; i = i + 1) {
+            for (int j = 0; j < p2.length; j = j + 1) {
+                ans[i + j] = ans[i + j] + (p1[i] * p2[j]);
+            }
+        }
+        if (ans != ZERO) {
+            ans = trimArray(ans);
+        }
+        return ans;
+    }
+
+    /**
+     * A function that returns the longer of the two arrays.
+     *
+     * @param p1
+     * @param p2
+     * @return the longer array
+     */
+    public static double[] maxLength(double[] p1, double[] p2) {
+        double[] ans = ZERO;
         if (p1 == null && p2 == null) {
             return null;
         }
         if (p1.length < p2.length) {
-            double[] temp = p2;
-            p2 = p1;
-            p1 = temp;
-        } //now p1.length > p2.length
-        double[] temp1 = new double[p1.length];
-        if (p2 != ZERO) {
-            for (int n = 0; n < temp1.length; n = n + 1) {
-                temp1[n] = 1.0;
-            }
+            ans = p2;
+        } else {
+            ans = p1;
         }
-        ans = new double[p1.length];
-        for (int i = 0; i < p1.length; i = i + 1) {
-            while (i < p2.length) {
-                temp1[i] = p2[i];
-                break;
-            }
-            ans[i] = p1[i] * temp1[i];
+        return ans;
+    }
+
+    /**
+     * A function that returns the sorter of the two arrays.
+     *
+     * @param p1
+     * @param p2
+     * @return the sorter array.
+     */
+
+    public static double[] minLength(double[] p1, double[] p2) {
+        double[] ans = ZERO;
+        if (p1 == null && p2 == null) {
+            return null;
         }
+        if (p1.length <= p2.length) {
+            ans = p1;
+        } else {
+            ans = p2;
+        }
+        return ans;
+    }
+
+    /**
+     * The function reduces the polynomial's array representation by removing leading zero coefficients (consecutive zeros at the end of the array), with the exception of the zero polynomial.
+     * @param poly
+     * @return a reduced array.
+     */
+    public static double[] trimArray (double[] poly){
+        double[] ans = poly;
+        int len =  poly.length;
+        for (int i = 1; poly[poly.length - i] == 0; i = i + 1){
+            if (poly[poly.length - i] == 0){
+                len = len-1;
+            }
+            ans = new double[len];
+            for (int j = 0; j < ans.length; j = j + 1){
+                ans[j] = poly[j];
+            }
+            return ans;
+        }
+
+
         return ans;
     }
 
@@ -386,7 +439,7 @@ public class Ex1 {
      * if (po[] = null){return ans;}
      * double [] p1 = new double [po.length-1]
      * for (double i=1; i < po.length; i=i+1){
-     * p1[i-1] = i*po[i]                               // po{5,2,3} = p1{2,9}
+     * p1[i-1] = i*po[i]                               //for example: po{5,2,3} = p1{2,9}
      * ans = p1 []
      * }
      * return ans
@@ -399,7 +452,7 @@ public class Ex1 {
         }
         double[] p1 = new double[po.length - 1];
         for (int i = 1; i < po.length; i = i + 1) {
-            p1[i - 1] = (double) i * po[i];                             // po{5,2,3} = p1{2,9}
+            p1[i - 1] = (double) i * po[i];
             ans = p1;
         }
         return ans;
