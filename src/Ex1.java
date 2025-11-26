@@ -194,9 +194,24 @@ public class Ex1 {
      */
     public static double sameValue(double[] p1, double[] p2, double x1, double x2, double eps) {
         double ans = x1;
-        /** add you code below
+        double midRange = (x1 + x2) / 2;
+        double p1x = f(p1, midRange);
+        double p2x = f(p2, midRange);
+        if (Math.abs(p1x - p2x) <= eps) {
+            return midRange;
+        }
+        if (isIntersectionRoot(p1, p2, x1, midRange)) {
+            return sameValue(p1, p2, x1, midRange, eps);
+        } else {
+            return sameValue(p1, p2, midRange, x2, eps);
+        }
+    }
 
-         /////////////////// */
+    public static boolean isIntersectionRoot(double[] p1, double[] p2, double x1, double x2) {
+        boolean ans = false;
+        if ((f(p1, x1) - f(p2, x1)) * (f(p1, x2) - f(p2, x2)) <= 0) {
+            ans = true;
+        }
         return ans;
     }
 
@@ -214,11 +229,62 @@ public class Ex1 {
      * @return the length approximation of the function between f(x1) and f(x2).
      */
     public static double length(double[] p, double x1, double x2, int numberOfSegments) {
-        double ans = x1;
-        /** add you code below
-
-         /////////////////// */
+        double ans = 0;
+        if (numberOfSegments < 1 || x1 > x2) {
+            return -1;
+        }
+        double[][] pointsXY = pointsOnPolynom(p, x1, x2, numberOfSegments);
+        for (int i = 0; i < pointsXY.length - 1; i = i + 1) {
+            double xi1 = pointsXY[i][0];
+            double xi2 = pointsXY[i + 1][0];
+            double yi1 = pointsXY[i][1];
+            double yi2 = pointsXY[i + 1][1];
+            ans = ans + segmentLength(xi1, xi2, yi1, yi2);
+        }
         return ans;
+    }
+
+    /**
+     * The function computes the distance between two points.
+     * Using the formula to calculate the distance between two points
+     *
+     * @param x1
+     * @param x2
+     * @param y1
+     * @param y2
+     * @return the distance between two points.
+     */
+    public static double segmentLength(double x1, double x2, double y1, double y2) {
+        double ans = 0;
+        double inSqrt = 0;
+        inSqrt = (Math.pow(y2 - y1, 2)) + (Math.pow(x2 - x1, 2));         //always positive
+        ans = Math.sqrt(inSqrt);
+        return ans;
+    }
+
+    /**
+     * The function is a helper function that generates all the (x,y) points on the polynomial between two X values.
+     * The function takes a range [x1, x2] and a positive number specifying the number of segments to divide the range.
+     * It divides the range into equal segments and returns the (x, y) values of the points on the polynomial.
+     *
+     * @param p                - the polynomial function.
+     * @param x1               - minimal value of the range.
+     * @param x2               - maximal value of the range.
+     * @param numberOfSegments - (A positive integer value (1,2,...).
+     * @return a 2D array representing points on the polynomial.
+     */
+    public static double[][] pointsOnPolynom(double[] p, double x1, double x2, int numberOfSegments) {
+        double[][] pointsXY = new double[numberOfSegments + 2][2];
+        double distance = (x2 - x1) / (numberOfSegments + 1);
+        double currentX = 0;
+        double currentY = 0;
+        for (int i = 0; i <= numberOfSegments + 1; i = i + 1) {
+            currentX = i * distance + x1;
+            currentY = f(p, currentX);
+            pointsXY[i][0] = currentX;
+            pointsXY[i][1] = currentY;
+        }
+        return pointsXY;
     }
 
     /**
@@ -238,6 +304,13 @@ public class Ex1 {
         /** add you code below
 
          /////////////////// */
+        return ans;
+    }
+
+    public static double trapezoidArea(double[] p1, double[] p2, double x1, double x2) {
+        double ans = 0;
+
+
         return ans;
     }
 
@@ -384,11 +457,11 @@ public class Ex1 {
     }
 
     /**
-     * A function that returns the sorter of the two arrays.
+     * A function that returns the shorter of the two arrays.
      *
      * @param p1
      * @param p2
-     * @return the sorter array.
+     * @return the shorter array.
      */
 
     public static double[] minLength(double[] p1, double[] p2) {
@@ -406,24 +479,23 @@ public class Ex1 {
 
     /**
      * The function reduces the polynomial's array representation by removing leading zero coefficients (consecutive zeros at the end of the array), with the exception of the zero polynomial.
+     *
      * @param poly
      * @return a reduced array.
      */
-    public static double[] trimArray (double[] poly){
+    public static double[] trimArray(double[] poly) {
         double[] ans = poly;
-        int len =  poly.length;
-        for (int i = 1; poly[poly.length - i] == 0; i = i + 1){
-            if (poly[poly.length - i] == 0){
-                len = len-1;
-            }
-            ans = new double[len];
-            for (int j = 0; j < ans.length; j = j + 1){
-                ans[j] = poly[j];
-            }
-            return ans;
+        int len = poly.length;
+        if (poly.length <= 1) {
+            return poly;
         }
-
-
+        while (len > 1 && poly[len-1] == 0 ) {
+            len = len - 1;
+        }
+        ans = new double[len];
+        for (int j = 0; j < len; j = j + 1) {
+            ans[j] = poly[j];
+        }
         return ans;
     }
 

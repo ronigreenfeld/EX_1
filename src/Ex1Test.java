@@ -335,5 +335,98 @@ class Ex1Test {
         assertTrue(Ex1.minLength(p1, p2).length == p1.length);
     }
 
+    @Test
+    public void testSegmentLength() {
+        double x1 = 0;
+        double x2 = 4;
+        double y1 = 0;
+        double y2 = 3;
+        assertEquals(5.0, Ex1.segmentLength(x1, x2, y1, y2));
+    }
 
+    @Test
+    public void testSegmentLength1() {
+        double x1 = 3;
+        double x2 = -1;
+        double y1 = 2;
+        double y2 = -1;
+        assertEquals(5.0, Ex1.segmentLength(x1, x2, y1, y2));
+    }
+    @Test
+    public void testPointsOnPolynom (){
+
+
+    }
+
+    @Test
+    public void testLength(){
+        double[] p1 = {2};
+        double x1 = 0;
+        double x2 = 8;
+        int n1 = 3;
+        int n2 = 0;
+        int n3 = -4;
+        assertEquals(8.0,Ex1.length(p1,x1,x2,n1));
+        assertEquals(-1,Ex1.length(p1,x1,x2,n2));
+        assertEquals(-1,Ex1.length(p1,x1,x2,n3));
+    }
+
+
+    @Test
+    public void testLength2(){
+        double[] p1 = {2,2};
+        double x1 = -3;
+        double x2 = 5;
+        int n = 2;
+        assertEquals(8*Math.sqrt(5),Ex1.length(p1,x1,x2,n));
+    }
+
+    @Test
+    public void testLength3(){
+        double[] p1 = {0,0,0};
+        double x1 = -3;
+        double x2 = 5;
+        int n = 2;
+        assertEquals(0,Ex1.length(p1,x1,x2,n));
+    }
+
+
+    @Test
+    public void testTrimArray(){
+        double[] p1 = {7.5,2.1,3.0};
+        assertTrue(Ex1.trimArray(p1).length == p1.length);
+        assertTrue(Ex1.equals(Ex1.trimArray(p1), p1));
+    }
+    @Test
+    public void testTrimArray2(){
+        double[] p1 = {7.5,2.1,3.0,0.0,0.0};
+        double [] expected = {7.5,2.1,3.0};
+        assertTrue(Ex1.equals(Ex1.trimArray(p1), expected));
+    }
+    @Test
+    public void testTrimArray3(){
+        double[] p1 = {7.5,2.1,0.0,3.0,0.0};
+        double [] expected = {7.5,2.1,0.0,3.0};
+        assertTrue(Ex1.equals(Ex1.trimArray(p1), expected));
+    }
+    @Test
+    public void testTrimArray4(){
+        double[] p1 = {0.0,0.0,0.0,0.0,0.0};
+        double [] expected = Ex1.ZERO;
+        assertTrue(Ex1.equals(Ex1.trimArray(p1), expected));
+    }
+    @Test
+    public void testTrimArray5(){
+        double[] p1 = {0.0};
+        double [] p2 = {10.0};
+        assertTrue(Ex1.equals(Ex1.trimArray(p1), Ex1.ZERO));
+        assertTrue(Ex1.equals(Ex1.trimArray(p2), p2));
+    }
+
+
+
+
+    @Test
+    public void testisIntersectionRoot(){
+    }
 }
