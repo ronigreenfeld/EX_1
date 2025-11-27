@@ -193,11 +193,11 @@ public class Ex1 {
      * @return an x value (x1<=x<=x2) for which |p1(x) - p2(x)| < eps.
      */
     public static double sameValue(double[] p1, double[] p2, double x1, double x2, double eps) {
-        double ans = x1;
+        if (x1 > x2){return 1/0;}                   //return error
         double midRange = (x1 + x2) / 2;
         double p1x = f(p1, midRange);
         double p2x = f(p2, midRange);
-        if (Math.abs(p1x - p2x) <= eps) {
+        if (Math.abs(p1x - p2x) <= eps || Math.abs(x1 - x2) <= eps) {
             return midRange;
         }
         if (isIntersectionRoot(p1, p2, x1, midRange)) {
@@ -207,6 +207,16 @@ public class Ex1 {
         }
     }
 
+    /**
+     * The function checks if the two polynomials have an intersection point within a specific range.
+     * Relies on (p1(x1)-p2(x1)) * (p1(x2)-p2(x2)) <= 0.
+     *
+     * @param p1
+     * @param p2
+     * @param x1
+     * @param x2
+     * @return true if and only if there is an intersection point within the range.
+     */
     public static boolean isIntersectionRoot(double[] p1, double[] p2, double x1, double x2) {
         boolean ans = false;
         if ((f(p1, x1) - f(p2, x1)) * (f(p1, x2) - f(p2, x2)) <= 0) {
@@ -274,6 +284,9 @@ public class Ex1 {
      * @return a 2D array representing points on the polynomial.
      */
     public static double[][] pointsOnPolynom(double[] p, double x1, double x2, int numberOfSegments) {
+        if (numberOfSegments < 1 || x1 > x2) {
+            return null;
+        }
         double[][] pointsXY = new double[numberOfSegments + 2][2];
         double distance = (x2 - x1) / (numberOfSegments + 1);
         double currentX = 0;
@@ -301,16 +314,42 @@ public class Ex1 {
      */
     public static double area(double[] p1, double[] p2, double x1, double x2, int numberOfTrapezoid) {
         double ans = 0;
-        /** add you code below
+        if (numberOfTrapezoid < 1 || x1 > x2) {
+            return -1;
+        }
+        for (int i = 0; i < numberOfTrapezoid; i = i + 1) {
+            double distance = (x2 - x1) / (numberOfTrapezoid);
+            double currentX1 = (i * distance) + x1;
+            double currentX2 = currentX1 + distance;
+            if (!isIntersectionRoot(p1, p2, currentX1, currentX2)) {
+                ans = trapezoidArea(p1, p2, currentX1, currentX2) + ans;
+            }
+            else {
+                double mid = sameValue(p1,p2,currentX1,currentX2,EPS/10000);
+                double area1 = trapezoidArea(p1, p2, currentX1, mid);
+                double area2 = trapezoidArea(p1, p2, mid, currentX2);
+                ans = ans + area1 + area2;
+            }
+        }
 
-         /////////////////// */
         return ans;
     }
 
+    /**
+     * A function that calculates the area of a trapezoid.
+     *
+     * @param p1
+     * @param p2
+     * @param x1
+     * @param x2
+     * @return the area of a trapezoid.
+     */
     public static double trapezoidArea(double[] p1, double[] p2, double x1, double x2) {
         double ans = 0;
-
-
+        double base1 = Math.abs(f(p1, x1) - f(p2, x1));
+        double base2 = Math.abs(f(p1, x2) - f(p2, x2));
+        double height = Math.abs(x2 - x1);
+        ans = (height * (base1 + base2)) / 2;
         return ans;
     }
 
@@ -489,7 +528,7 @@ public class Ex1 {
         if (poly.length <= 1) {
             return poly;
         }
-        while (len > 1 && poly[len-1] == 0 ) {
+        while (len > 1 && poly[len - 1] == 0) {
             len = len - 1;
         }
         ans = new double[len];

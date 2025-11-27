@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -354,8 +356,68 @@ class Ex1Test {
     }
     @Test
     public void testPointsOnPolynom (){
-
-
+        double [] p1 = {3};
+        double x1 = 1;
+        double x2 = 9;
+        int n = 3;
+        double[][] expected = {{1,3},{3,3},{5,3},{7,3},{9,3}};
+        double[][] actual = Ex1.pointsOnPolynom(p1, x1, x2, n);
+        for (int i = 0; i < n+2; i=i+1) {
+            if (expected[i][0] != actual[i][0]) {
+                fail();
+            }
+            if (expected[i][1] != actual[i][1]) {
+                fail();
+            }
+        }
+    }
+    @Test
+    public void testPointsOnPolynom2() {
+        double [] p1 = {0,1};
+        double x1 = 1;
+        double x2 = 9;
+        int n = 1;
+        double[][] expected = {{1,1},{5,5},{9,9}};
+        double[][] actual = Ex1.pointsOnPolynom(p1, x1, x2, n);
+        for (int i = 0; i < n+2; i=i+1) {
+            if (expected[i][0] != actual[i][0]) {
+                fail();
+            }
+            if (expected[i][1] != actual[i][1]) {
+                fail();
+            }
+        }
+    }
+    @Test
+    /**
+     * Testing the points (x,y) on the zero polynomial – all points are of the form (x,0)
+     */
+    public void testPointsOnPolynom3() {
+        double [] p1 = {0,0,0};
+        double x1 = 1;
+        double x2 = 9;
+        int n = 1;
+        double[][] expected = {{1,0},{5,0},{9,0}};
+        double[][] actual = Ex1.pointsOnPolynom(p1, x1, x2, n);
+        for (int i = 0; i < n+2; i=i+1) {
+            if (expected[i][0] != actual[i][0]) {
+                fail();
+            }
+            if (expected[i][1] != actual[i][1]) {
+                fail();
+            }
+        }
+    }
+    @Test
+    /**
+     * Testing the case where the value of n is out of range.
+     */
+    public void testPointsOnPolynom4() {
+        double [] p1 = {3,5.3,0,1.2};
+        double x1 = 1;
+        double x2 = 9;
+        int n = 0;
+        assertEquals(null, Ex1.pointsOnPolynom(p1, x1, x2, n));
     }
 
     @Test
@@ -392,39 +454,52 @@ class Ex1Test {
 
 
     @Test
+    /**
+     * Test of a constant polynomial – remains as is.
+     */
     public void testTrimArray(){
         double[] p1 = {7.5,2.1,3.0};
         assertTrue(Ex1.trimArray(p1).length == p1.length);
         assertTrue(Ex1.equals(Ex1.trimArray(p1), p1));
     }
     @Test
+    /**
+     * Case of leading zeros – should be trimmed.
+     */
     public void testTrimArray2(){
         double[] p1 = {7.5,2.1,3.0,0.0,0.0};
         double [] expected = {7.5,2.1,3.0};
         assertTrue(Ex1.equals(Ex1.trimArray(p1), expected));
     }
     @Test
+    /**
+     * Case of leading zeros and a non-leading zero – only the leading zeros are trimmed.
+     */
     public void testTrimArray3(){
         double[] p1 = {7.5,2.1,0.0,3.0,0.0};
         double [] expected = {7.5,2.1,0.0,3.0};
         assertTrue(Ex1.equals(Ex1.trimArray(p1), expected));
     }
     @Test
+    /**
+     * The zero polynomial – all zeros should be trimmed, but [0.0] must remain
+     */
     public void testTrimArray4(){
         double[] p1 = {0.0,0.0,0.0,0.0,0.0};
         double [] expected = Ex1.ZERO;
         assertTrue(Ex1.equals(Ex1.trimArray(p1), expected));
     }
     @Test
+    /**
+     * Test of the zero polynomial with length 1 – remains as is.
+     * Test of a constant polynomial with length 1 – remains as is.
+     */
     public void testTrimArray5(){
         double[] p1 = {0.0};
         double [] p2 = {10.0};
         assertTrue(Ex1.equals(Ex1.trimArray(p1), Ex1.ZERO));
         assertTrue(Ex1.equals(Ex1.trimArray(p2), p2));
     }
-
-
-
 
     @Test
     public void testisIntersectionRoot(){
