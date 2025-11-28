@@ -166,6 +166,47 @@ class Ex1Test {
             assertFalse(Ex1.equals(d1[i], xx[i]));
         }
     }
+    @Test
+    /**
+     * Testing the Zero Polynomial.
+     */
+    public void testEquals2() {
+        double[] p1 = {0,0,0};
+        double[] p2 = Ex1.ZERO;
+        assertTrue(Ex1.equals(p1, p2));
+    }
+    @Test
+    /**
+     * Testing for different coefficient order
+     */
+    public void testEquals3() {
+        double[] p1 = {1,2,3};
+        double[] p2 = {1,3,2};
+        assertFalse(Ex1.equals(p1, p2));
+    }
+    @Test
+    /**
+     * Testing for different array lengths.
+     * Testing for different signs (+/-).
+     */
+    public void testEquals4() {
+        double[] p1 = {1,2,3};
+        double[] p2 = {1,2,3,0.1};
+        double[] p3 = {-1,2,3};
+        assertFalse(Ex1.equals(p1, p2));
+        assertFalse(Ex1.equals(p1, p3));
+    }
+    @Test
+    /**
+     * Testing for NULL arrays.
+     */
+    public void testEquals5() {
+        double[] p1 = {1,2,3};
+        double[] p2 = null;
+        double[] p3 = null;
+        assertFalse(Ex1.equals(p1, p2));
+        assertTrue(Ex1.equals(p2, p3));
+    }
 
     @Test
     /**
@@ -252,9 +293,9 @@ class Ex1Test {
         String s1 = Ex1.poly(p1);
         String s2 = Ex1.poly(p2);
         String s3 = Ex1.poly(p3);
-        assertTrue(s1.equals("+4.6"));
-        assertTrue(s2.equals("+3.0X +2.0"));
-        assertTrue(s3.equals("+2.1X^3 +5.0X^2 +1.0X +1.0"));
+        assertTrue(s1.equals("4.6"));
+        assertTrue(s2.equals("3.0x +2.0"));
+        assertTrue(s3.equals("2.1x^3 +5.0x^2 +1.0x +1.0"));
     }
 
     @Test
@@ -265,16 +306,16 @@ class Ex1Test {
         String s1 = Ex1.poly(p1);
         String s2 = Ex1.poly(p2);
         String s3 = Ex1.poly(p3);
-        assertTrue(s1.equals("0"));
-        assertTrue(s2.equals("+4.5X"));
-        assertTrue(s3.equals("+5.1X^3 +3.0X"));
+        assertTrue(s1.equals("0.0"));
+        assertTrue(s2.equals("4.5x"));
+        assertTrue(s3.equals("5.1x^3 +3.0x"));
     }
 
     @Test
     public void testPoly3() {
         double[] p1 = {0, -24.1, -3, 6.1};
         String s1 = Ex1.poly(p1);
-        assertTrue(s1.equals("+6.1X^3 -3.0X^2 -24.1X"));
+        assertTrue(s1.equals("6.1x^3 -3.0x^2 -24.1x"));
     }
 
     @Test
@@ -282,9 +323,11 @@ class Ex1Test {
         double num1 = 35;
         double num2 = -2.3;
         double num3 = 0.0;
+        double num4 = -(-3);
         assertEquals("+35.0", Ex1.addSign(num1));
         assertEquals("-2.3", Ex1.addSign(num2));
         assertEquals("+0.0", Ex1.addSign(num3));
+        assertEquals("+3.0", Ex1.addSign(num4));
     }
 
     @Test
@@ -323,19 +366,22 @@ class Ex1Test {
     }
 
 
-    @Test
+   /*
+   @Test
     public void testMaxLength() {
         double[] p1 = po1;
         double[] p2 = po2;
         assertTrue(Ex1.maxLength(p1, p2).length == p2.length);
     }
-
+    */
+    /*
     @Test
     public void testMinLength() {
         double[] p1 = po1;
         double[] p2 = po2;
         assertTrue(Ex1.minLength(p1, p2).length == p1.length);
     }
+    */
 
     @Test
     public void testSegmentLength() {
@@ -449,7 +495,7 @@ class Ex1Test {
         double x1 = -3;
         double x2 = 5;
         int n = 2;
-        assertEquals(0,Ex1.length(p1,x1,x2,n));
+        assertEquals(8,Ex1.length(p1,x1,x2,n));
     }
 
 
@@ -502,6 +548,121 @@ class Ex1Test {
     }
 
     @Test
-    public void testisIntersectionRoot(){
+    /**
+     * There is an intersection.
+     */
+    public void testIsIntersectionRoot(){
+        double[] p1 = {10,-2};
+        double[] p2 = {-10,2};
+        double[] p3 = Ex1.ZERO;
+        double x1= 1;
+        double x2= 5;
+        assertTrue(Ex1.isIntersectionRoot(p1,p2,x1,x2));
+        assertTrue(Ex1.isIntersectionRoot(p1,p3,x1,x2));
+        assertTrue(Ex1.isIntersectionRoot(p2,p3,x1,x2));
+    }
+    @Test
+    /**
+     * There is no intersection.
+     */
+    public void testIsIntersectionRoot2(){
+        double[] p1 = {10,2};
+        double[] p2 = {7,8};
+        double[] p3 = {-10,2};
+        double[] p4 = {-7,8};
+        double x1 = 1;
+        double x2 = 5;
+        assertFalse(Ex1.isIntersectionRoot(p1,p2,x1,x2));
+        assertFalse(Ex1.isIntersectionRoot(p3,p4,x1,x2));
+
+    }
+
+    @Test
+    public void testTrapezoidArea(){
+        double[] p1 = {6,0.-2.25};
+        double [] p2 = {1.0,0.25};
+        double x1 = 0.0;
+        double x2 = 4.0;
+        assertEquals(20, Ex1.trapezoidArea(p1,p2,x1,x2));
+
+    }
+    @Test
+    /**
+     * Testing the case where the height is zero.
+     * This case cannot occur because it is assumed that x1 < x2.
+     */
+    public void testTrapezoidArea1(){
+        double[] p1 = {6,0.-2.25};
+        double [] p2 = {1.0,0.25};
+        double x1 = 0.0;
+        double x2 = 0.0;
+        assertEquals(0, Ex1.trapezoidArea(p1,p2,x1,x2));
+
+    }
+    @Test
+    /**
+     * Symmetry Test.
+     */
+    public void testTrapezoidArea2(){
+        double[] p1 = po1;
+        double [] p2 = po2;
+        double x1 = 0.0;
+        double x2 = 8.0;
+        assertEquals(Ex1.trapezoidArea(p2,p1,x1,x2), Ex1.trapezoidArea(p1,p2,x1,x2));
+    }
+
+    @Test
+    public void testisRemoveLeadingPlus(){
+        String str1 = " -5.32";
+        String str2 = "-5.32";
+        String str3 = "+x^2";
+        String str4 = " +x^2";
+        assertEquals("-5.32",  Ex1.removeLeadingPlus(str1));
+        assertEquals("-5.32",  Ex1.removeLeadingPlus(str2));
+        assertEquals("x^2",  Ex1.removeLeadingPlus(str3));
+        assertEquals("x^2",  Ex1.removeLeadingPlus(str4));
+    }
+    @Test
+    public void testSplitString(){
+        String str1 = " -3.0x^3 +4.6x^2 -2x +2";
+        String [] str2 = Ex1.splitString(str1);
+        assertEquals(4, str2.length);
+    }
+    @Test
+    public void testSplitString2(){
+        String str = "3.4x^2   +4.5x -   4";
+        String [] str2 = Ex1.splitString(str);
+        assertEquals(3, str2.length);
+    }
+    @Test
+    public void testFindExponent(){
+        String str1 = " -3.0x^3 +4.6x^2 -2x +2";
+        String str2 = "x^2";
+        String str3 = "6x^8 +3x^4 +6";
+        String str4 = "8x +2";
+        String str5 = "2";
+        String str6 = "x + x + 3";
+        String str7 = "";
+        assertEquals(3, Ex1.findExponent(str1));
+        assertEquals(2, Ex1.findExponent(str2));
+        assertEquals(8, Ex1.findExponent(str3));
+        assertEquals(1, Ex1.findExponent(str4));
+        assertEquals(0, Ex1.findExponent(str5));
+        assertEquals(1, Ex1.findExponent(str6));
+        assertEquals(0, Ex1.findExponent(str7));
+    }
+
+    @Test
+    public void testFullPolyString(){
+        String str1 = "-x";
+        String str2 = "+x";
+        String str3 = "+x^2 -x +3.0";
+        String str4 = "x^2";
+        String str5 = "2.5x^2 -4.0x +3.0";
+        assertEquals("-1.0x", Ex1.fullPolyString(str1));
+        assertEquals("+1.0x", Ex1.fullPolyString(str2));
+        assertEquals("+1.0x^2-1.0x+3.0", Ex1.fullPolyString(str3));
+        assertEquals("+1.0x^2", Ex1.fullPolyString(str4));
+        assertEquals("2.5x^2-4.0x+3.0", Ex1.fullPolyString(str5));
     }
 }

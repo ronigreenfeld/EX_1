@@ -75,9 +75,19 @@ public class Ex1 {
         int lx = xx.length;
         int ly = yy.length;
         if (xx != null && yy != null && lx == ly && lx > 1 && lx < 4) {
-            /** add you code below
-
-             /////////////////// */
+            double denom = (xx[0] - xx[1]) * (xx[0] - xx[2]) * (xx[1] - xx[2]);
+            double A = (xx[2] * (yy[1] - yy[0]) + xx[1] * (yy[0] - yy[2]) + xx[0] * (yy[2] - yy[1])) / denom;
+            double B = (xx[2] * xx[2] * (yy[0] - yy[1]) + xx[1] * xx[1] * (yy[2] - yy[0]) + xx[0] * xx[0] * (yy[1] - yy[2])) / denom;
+            double C = (xx[1] * xx[2] * (xx[1] - xx[2]) * yy[0] + xx[2] * xx[0] * (xx[2] - xx[0]) * yy[1] + xx[0] * xx[1] * (xx[0] - xx[1]) * yy[2]) / denom;
+            if (A == 0 && B == 0) {
+                ans = new double[]{C};
+            }
+            if (A == 0 && B > 0) {
+                ans = new double[]{C, B};
+            }
+            if (A > 0) {
+                ans = new double[]{C, B, A};
+            }
         }
         return ans;
     }
@@ -91,7 +101,10 @@ public class Ex1 {
      * @return true iff p1 represents the same polynomial function as p2.
      * <p>
      * <p>
+     * <p>
      * boolean ans = true
+     * trimArray (p1)                                           //reduces the polynomial p1.
+     * trimArray (p2)                                           //reduces the polynomial p2.
      * if (p1.length != p2.length) {return false}               //If the lengths are different - return false.
      * for (int i = 0; i < p1.length; i = i + 1) {              //A loop that iterates over all the elements of the arrays and compares them.
      * if (Math.abs(p1[i] - p2[i]) >= EPS) {return false}       //If the difference (in absolute value) is greater than EPS - return false.
@@ -102,6 +115,14 @@ public class Ex1 {
      */
     public static boolean equals(double[] p1, double[] p2) {
         boolean ans = true;
+        if (p1 == null && p2 == null) {
+            return true;
+        }
+        if ((p1 == null && p2 != null) || (p2 == null && p1 != null)) {
+            return false;
+        }
+        p1 = trimArray(p1);
+        p2 = trimArray(p2);
         if (p1.length != p2.length) {
             return false;
         }
@@ -118,7 +139,7 @@ public class Ex1 {
      * For example the array {2,0,3.1,-1.2} will be presented as the following String  "-1.2x^3 +3.1x^2 +2.0"
      *
      * @param poly the polynomial function represented as an array of doubles
-     * @return String representing the polynomial function:
+     * @return String representing the polynomial function.
      * <p>
      * <p>
      * <p>
@@ -144,22 +165,50 @@ public class Ex1 {
      */
     public static String poly(double[] poly) {
         String ans = "";
-        if (poly.length == 0) {
-            ans = "0";
-        } else {
-            if (poly.length == 1) {
-                ans = addSign(poly[0]);
-            }
-            if (poly.length == 2) {
-                ans = addSign(poly[1]) + "X " + addSign(poly[0]);
-            }
-            if (poly.length >= 3) {
-                ans = addSign(poly[1]) + "X " + addSign(poly[0]);
-                for (int i = 2; i < poly.length; i = i + 1) {
-                    ans = addSign(poly[i]) + "X^" + i + " " + ans;
+        if (poly == null) {
+            return null;
+        }
+        if (poly.length == 1) {
+            ans = "" + poly[0];
+        }
+        if (poly.length >= 2) {
+            for (int i = 0; i < poly.length; i = i + 1) {
+                if (poly[i] == 0) {
+                    continue;
+                }
+                if (i == 0) {
+                    ans = addSign(poly[i]);
+                }
+                if (i == 1) {
+                    ans = addSign(poly[i]) + "x" + ans;
+                }
+                if (i >= 2) {
+                    ans = addSign(poly[i]) + "x^" + i + ans;
                 }
             }
+            ans = ans.replace("+", " +").replace("-", " -");
         }
+        ans = removeLeadingPlus(ans);
+        return ans;
+    }
+
+    /**
+     * The function deletes leading characters from the string if they are a space (" ") or a plus sign ("+").
+     *
+     * @param str
+     * @return
+     */
+    public static String removeLeadingPlus(String str) {
+        ;
+        String ans = "";
+        StringBuilder ans1 = new StringBuilder(str);
+        if (ans1.charAt(0) == ' ') {
+            ans1.deleteCharAt(0);
+        }
+        if (ans1.charAt(0) == '+') {
+            ans1.deleteCharAt(0);
+        }
+        ans = ans1.toString();
         return ans;
     }
 
@@ -168,8 +217,6 @@ public class Ex1 {
      *
      * @param mekadem
      * @return a number with a positive or negative sign.
-     *
-     *
      */
     public static String addSign(double mekadem) {
         String sign;
@@ -193,7 +240,9 @@ public class Ex1 {
      * @return an x value (x1<=x<=x2) for which |p1(x) - p2(x)| < eps.
      */
     public static double sameValue(double[] p1, double[] p2, double x1, double x2, double eps) {
-        if (x1 > x2){return 1/0;}                   //return error
+        if (x1 > x2) {
+            return 1 / 0;
+        }                   //return error
         double midRange = (x1 + x2) / 2;
         double p1x = f(p1, midRange);
         double p2x = f(p2, midRange);
@@ -323,9 +372,8 @@ public class Ex1 {
             double currentX2 = currentX1 + distance;
             if (!isIntersectionRoot(p1, p2, currentX1, currentX2)) {
                 ans = trapezoidArea(p1, p2, currentX1, currentX2) + ans;
-            }
-            else {
-                double mid = sameValue(p1,p2,currentX1,currentX2,EPS/10000);
+            } else {
+                double mid = sameValue(p1, p2, currentX1, currentX2, EPS / 10000);
                 double area1 = trapezoidArea(p1, p2, currentX1, mid);
                 double area2 = trapezoidArea(p1, p2, mid, currentX2);
                 ans = ans + area1 + area2;
@@ -363,9 +411,84 @@ public class Ex1 {
      */
     public static double[] getPolynomFromString(String p) {
         double[] ans = ZERO;//  -1.0x^2 +3.0x +2.0
-        /** add you code below
+        p = fullPolyString(p);
+        ans = new double[findExponent(p) + 1];
+        String[] splitP = splitString(p);
+        for (int i = 0; i < splitP.length; i++) {
+            int place = findExponent(splitP[i]);
+            int indexOfX = splitP[i].indexOf('x');
+            if (indexOfX != -1) {
+                splitP[i] = splitP[i].substring(0, indexOfX);
+                double x = Double.parseDouble(splitP[i]);
+                ans[place] = x;
+            } else {
+                ans[0] = Double.parseDouble(splitP[i]);
+            }
+        }
+        return ans;
+    }
 
-         /////////////////// */
+    /**
+     * his function normalizes the full polynomial equation.
+     * Explicitly including coefficients of (1) and (-1) that might be implicitly omitted in the original string.
+     *
+     * @param p
+     * @return
+     */
+    public static String fullPolyString(String p) {
+        p = p.replaceAll("\\s", "");
+        if (p.startsWith("x")) {
+            p = "+1.0" + p;
+        }
+        p = p.replaceAll("\\+x", "+1.0x");
+        p = p.replaceAll("-x", "-1.0x");
+        return p;
+    }
+
+
+    /**
+     * Splitting the string into smaller substrings that represent the terms of the polynomial.
+     *
+     * @param p
+     * @return
+     */
+    public static String[] splitString(String p) {
+        p = p.replaceAll("\\s", "");
+        p = p.replaceAll("-", " -").replaceAll("\\+", " +");
+        p = removeLeadingPlus(p);
+        String[] ans = p.split(" ");
+        return ans;
+    }
+
+    /**
+     * This function calculates the degree of the polynomial equation.
+     * The degree is the value of the highest exponent found in the equation.
+     * It assumes the terms are correctly ordered from the highest degree to the lowest.
+     * An empty string ("") will return an exponent of 0.
+     *
+     * @param p
+     * @return
+     */
+    public static int findExponent(String p) {
+        int ans = 0;
+        int indexOfPow = p.indexOf('^');
+        if (indexOfPow != -1) {
+            int startIndex = indexOfPow + 1;
+            int endIndex = startIndex;
+            while (endIndex < p.length() && Character.isDigit(p.charAt(endIndex))) {
+                endIndex++;
+            }
+            String exponent = p.substring(startIndex, endIndex);
+            ans = Integer.parseInt(exponent);
+        }
+        if (indexOfPow == -1) {
+            int indexOfX = p.indexOf('x');
+            if (indexOfX == -1) {
+                ans = 0;
+            } else {
+                ans = 1;
+            }
+        }
         return ans;
     }
 
@@ -475,13 +598,14 @@ public class Ex1 {
         return ans;
     }
 
-    /**
+    /*
      * A function that returns the longer of the two arrays.
      *
      * @param p1
      * @param p2
      * @return the longer array
      */
+    /*
     public static double[] maxLength(double[] p1, double[] p2) {
         double[] ans = ZERO;
         if (p1 == null && p2 == null) {
@@ -494,8 +618,8 @@ public class Ex1 {
         }
         return ans;
     }
-
-    /**
+     */
+    /*
      * A function that returns the shorter of the two arrays.
      *
      * @param p1
@@ -503,7 +627,8 @@ public class Ex1 {
      * @return the shorter array.
      */
 
-    public static double[] minLength(double[] p1, double[] p2) {
+   /*
+   public static double[] minLength(double[] p1, double[] p2) {
         double[] ans = ZERO;
         if (p1 == null && p2 == null) {
             return null;
@@ -515,6 +640,7 @@ public class Ex1 {
         }
         return ans;
     }
+    */
 
     /**
      * The function reduces the polynomial's array representation by removing leading zero coefficients (consecutive zeros at the end of the array), with the exception of the zero polynomial.
